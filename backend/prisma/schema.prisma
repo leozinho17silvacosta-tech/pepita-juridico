@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LawsuitStatus {
+  PENDING
+  FINISHED
+  ARCHIVED
+}
+
+enum PriorityLevel {
+  NO_DEADLINE
+  MODERATE
+  URGENT
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  oab          String?
+  plan         String       @default("FREE") // FREE ou PRO
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  clients      Client[]
+  lawsuits     Lawsuit[]
+  appointments Appointment[]
+  pepitaChats  PepitaChat[]
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  title     String
+  fileUrl   String   @db.Text // <--- O @db.Text garante suporte a arquivos maiores no Neon DB
+  createdAt DateTime @default(now())
+
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model Client {
+  id            String   @id @default(uuid())
+  name          String
+  age           Int?     // Idade do cliente
+  photoUrl      String?  // Foto (URL ou base64)
+  phone         String   // Formato para WhatsApp
+  email         String?
+  address       String?
+  cpf           String?
+  rg            String?
+  maritalStatus String?
+
+  profession    String?
+  caseType      String   // Ex: "Aposentadoria", "Divórcio", etc.
+  docsChecklist Json?
+  feeStatus     String?  @default("PENDING")
+  feeValue      Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  lawsuits      Lawsuit[]
+  documents     Document[]
+  appointments  Appointment[]
+}
+
+model Lawsuit {
+  id           String    @id @default(uuid())
+  cnfNumber    String?   // Número do processo (ex: CNJ ou CNF)
+  title        String
+  area         String
+  description  String?
+  status       String    @default("PENDING") // PENDING, FINISHED, ARCHIVED
+  priority     String    @default("MODERATE") // NO_DEADLINE, MODERATE, URGENT
+  deadlineDate DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clientId     String
+  client       Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  updates      LawsuitUpdate[]
+}
+
+model LawsuitUpdate {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  date        DateTime @default(now())
+
+  lawsuitId   String
+  lawsuit     Lawsuit  @relation(fields: [lawsuitId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id        String   @id @default(uuid())
+  title     String
+  date      DateTime
+  type      String   @default("PRESENTIAL")
+  notes     String?
+  completed Boolean  @default(false)
+  priority  String   @default("MODERATE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model PepitaChat {
+  id        String   @id @default(uuid())
+  title     String
+  messages  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply transition-colors duration-300;
+  }
+}
+
+/* Scrollbar personalizada com toque roxo */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.22);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 51, 234, 0.45);
+}
+
+/* =========================================================
+   LIGHT MODE — CONTRASTE REFORÇADO SEM PERDER A LEVEZA
+   ========================================================= */
+
+[data-theme="light"] {
+  color: #0f172a;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(109, 40, 217, 0.28);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(109, 40, 217, 0.48);
+}
+
+/* Textos neutros com mais peso visual no fundo claro */
+[data-theme="light"] .text-slate-300,
+[data-theme="light"] .text-slate-400 {
+  color: #475569;
+}
+
+[data-theme="light"] .text-slate-500 {
+  color: #334155;
+}
+
+[data-theme="light"] .text-slate-600 {
+  color: #1e293b;
+}
+
+[data-theme="light"] .text-slate-700,
+[data-theme="light"] .text-slate-800 {
+  color: #0f172a;
+}
+
+/* Opacidades baixas ajustadas para não apagarem labels e descrições */
+[data-theme="light"] .opacity-40,
+[data-theme="light"] .opacity-50 {
+  opacity: 0.78;
+  color: #475569;
+}
+
+[data-theme="light"] .opacity-60,
+[data-theme="light"] .opacity-65,
+[data-theme="light"] .opacity-70,
+[data-theme="light"] .opacity-75,
+[data-theme="light"] .opacity-80 {
+  opacity: 0.94;
+  color: #1e293b;
+}
+
+/* Destaques coloridos calibrados para fundo claro */
+[data-theme="light"] .text-purple-200,
+[data-theme="light"] .text-purple-300,
+[data-theme="light"] .text-purple-400 {
+  color: #6d28d9;
+}
+
+[data-theme="light"] .text-violet-300,
+[data-theme="light"] .text-violet-400 {
+  color: #5b21b6;
+}
+
+[data-theme="light"] .text-indigo-300,
+[data-theme="light"] .text-indigo-400 {
+  color: #4338ca;
+}
+
+[data-theme="light"] .text-emerald-300,
+[data-theme="light"] .text-emerald-400 {
+  color: #047857;
+}
+
+[data-theme="light"] .text-rose-300,
+[data-theme="light"] .text-rose-400 {
+  color: #be123c;
+}
+
+[data-theme="light"] .text-amber-300,
+[data-theme="light"] .text-amber-400 {
+  color: #b45309;
+}
+
+[data-theme="light"] .text-blue-300,
+[data-theme="light"] .text-blue-400 {
+  color: #1d4ed8;
+}
+
+/* Inputs, selects e placeholders mais definidos no claro */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  color: #0f172a;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: #64748b;
+  opacity: 1;
+}
+
+/* Bordas e superfícies claras com definição sutil */
+[data-theme="light"] .border-purple-100 {
+  border-color: rgba(196, 181, 253, 0.8);
+}
+
+[data-theme="light"] .border-purple-500\/10,
+[data-theme="light"] .border-purple-500\/15 {
+  border-color: rgba(109, 40, 217, 0.16);
+}
