@@ -150,7 +150,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const [dTitle, setDTitle] = useState("");
   const [dArea, setDArea] = useState("");
   const [dCnf, setDCnf] = useState("");
-  const [dPriority, setDPriority] = useState("URGENT");
+  const [dPriority] = useState("URGENT");
   const [dPubDate, setDPubDate] = useState(() => toInputDateString(new Date()));
   const [dBizDays, setDBizDays] = useState<number>(15);
   const [dClientId, setDClientId] = useState("");

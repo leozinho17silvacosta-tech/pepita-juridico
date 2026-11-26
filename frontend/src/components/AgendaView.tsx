@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../services/api";
-import {
-  Calendar as CalendarIcon,
-  Plus,
-  Clock,
-  FileText,
-  CheckCircle2,
-  X,
-  User,
-} from "lucide-react";
+import { Calendar as CalendarIcon, Plus, Clock, X, User } from "lucide-react";
 
 interface AgendaViewProps {
   darkMode: boolean;
