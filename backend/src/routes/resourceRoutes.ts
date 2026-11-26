@@ -71,8 +71,9 @@ router.post("/clients", async (req: AuthRequest, res) => {
 
 router.delete("/clients/:id", async (req: AuthRequest, res) => {
   try {
+    const id = String(req.params.id);
     const existing = await prisma.client.findFirst({
-      where: { id: req.params.id, userId: req.userId },
+      where: { id, userId: req.userId },
     });
     if (!existing) {
       return res.status(404).json({ error: "Cliente não encontrado." });
@@ -146,8 +147,9 @@ router.post("/lawsuits", async (req: AuthRequest, res) => {
 
 router.patch("/lawsuits/:id", async (req: AuthRequest, res) => {
   try {
+    const id = String(req.params.id);
     const existing = await prisma.lawsuit.findFirst({
-      where: { id: req.params.id, userId: req.userId },
+      where: { id, userId: req.userId },
     });
     if (!existing) {
       return res.status(404).json({ error: "Registro não encontrado." });
@@ -180,8 +182,9 @@ router.patch("/lawsuits/:id", async (req: AuthRequest, res) => {
 
 router.delete("/lawsuits/:id", async (req: AuthRequest, res) => {
   try {
+    const id = String(req.params.id);
     const existing = await prisma.lawsuit.findFirst({
-      where: { id: req.params.id, userId: req.userId },
+      where: { id, userId: req.userId },
     });
     if (!existing) {
       return res.status(404).json({ error: "Registro não encontrado." });
@@ -245,8 +248,9 @@ router.post("/appointments", async (req: AuthRequest, res) => {
 
 router.delete("/appointments/:id", async (req: AuthRequest, res) => {
   try {
+    const id = String(req.params.id);
     const existing = await prisma.appointment.findFirst({
-      where: { id: req.params.id, userId: req.userId },
+      where: { id, userId: req.userId },
     });
     if (!existing) {
       return res.status(404).json({ error: "Consulta não encontrada." });

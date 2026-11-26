@@ -297,7 +297,7 @@ const createClientHandler = async (req: AuthRequest, res: Response) => {
 
 const patchClientHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.client.findFirst({
       where: { id, userId: req.userId },
     });
@@ -350,7 +350,7 @@ const patchClientHandler = async (req: AuthRequest, res: Response) => {
 
 const putClientHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.client.findFirst({
       where: { id, userId: req.userId },
     });
@@ -371,7 +371,7 @@ const putClientHandler = async (req: AuthRequest, res: Response) => {
 
 const deleteClientHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.client.findFirst({
       where: { id, userId: req.userId },
     });
@@ -405,7 +405,7 @@ app.delete("/clients/:id", requireAuth, deleteClientHandler);
 // ==========================================
 const getDocumentsHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { clientId } = req.params;
+    const clientId = String(req.params.clientId);
     const client = await prisma.client.findFirst({
       where: { id: clientId, userId: req.userId },
     });
@@ -425,7 +425,7 @@ const getDocumentsHandler = async (req: AuthRequest, res: Response) => {
 
 const createDocumentHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { clientId } = req.params;
+    const clientId = String(req.params.clientId);
     const client = await prisma.client.findFirst({
       where: { id: clientId, userId: req.userId },
     });
@@ -446,7 +446,7 @@ const createDocumentHandler = async (req: AuthRequest, res: Response) => {
 
 const deleteDocumentHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const doc = await prisma.document.findFirst({
       where: { id, client: { userId: req.userId } },
     });
@@ -534,7 +534,7 @@ const createLawsuitHandler = async (req: AuthRequest, res: Response) => {
 
 const patchLawsuitHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.lawsuit.findFirst({
       where: { id, userId: req.userId },
     });
@@ -564,7 +564,7 @@ const patchLawsuitHandler = async (req: AuthRequest, res: Response) => {
 
 const createLawsuitUpdateHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.lawsuit.findFirst({
       where: { id, userId: req.userId },
     });
@@ -584,7 +584,7 @@ const createLawsuitUpdateHandler = async (req: AuthRequest, res: Response) => {
 
 const deleteLawsuitHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.lawsuit.findFirst({
       where: { id, userId: req.userId },
     });
@@ -999,8 +999,9 @@ const savePepitaChatHandler = async (req: AuthRequest, res: Response) => {
         : firstUserMsg);
 
     if (id) {
+      const chatId = String(id);
       const existing = await prisma.pepitaChat.findFirst({
-        where: { id, userId: req.userId },
+        where: { id: chatId, userId: req.userId },
       });
 
       if (!existing) {
@@ -1037,7 +1038,7 @@ const savePepitaChatHandler = async (req: AuthRequest, res: Response) => {
 
 const deletePepitaChatHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.pepitaChat.findFirst({
       where: { id, userId: req.userId },
     });
@@ -1169,7 +1170,7 @@ const getMpPaymentStatusHandler = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    const { paymentId } = req.params;
+    const paymentId = String(req.params.paymentId);
     const payment = new Payment(mpClient);
     const info = await payment.get({ id: paymentId });
     const approved = info.status === "approved";
@@ -1293,7 +1294,7 @@ const createAppointmentHandler = async (req: AuthRequest, res: Response) => {
 
 const patchAppointmentHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.appointment.findFirst({
       where: { id, userId: req.userId },
     });
@@ -1321,7 +1322,7 @@ const patchAppointmentHandler = async (req: AuthRequest, res: Response) => {
 
 const deleteAppointmentHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
     const existing = await prisma.appointment.findFirst({
       where: { id, userId: req.userId },
     });
