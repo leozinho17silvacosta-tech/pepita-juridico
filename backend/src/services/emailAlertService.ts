@@ -2,7 +2,14 @@ import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 
 const prisma = new PrismaClient();
-const resend = new Resend(process.env.RESEND_API_KEY);
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY não configurada no .env.");
+  }
+  return new Resend(apiKey);
+}
 
 function formatDateBr(date: Date | string): string {
   return new Date(date).toLocaleDateString("pt-BR", {
@@ -41,9 +48,7 @@ function getSaoPauloDayBounds(referenceDate: Date = new Date()) {
 }
 
 export async function sendDailyOfficeDigest() {
-  if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY não configurada no .env.");
-  }
+  const resend = getResendClient();
 
   const from =
     process.env.EMAIL_FROM ||
