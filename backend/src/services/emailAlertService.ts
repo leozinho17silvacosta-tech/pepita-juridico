@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 
 const prisma = new PrismaClient();
+const PEPITA_AVATAR_URL =
+  "https://pepitajuridico.com.br/images/pepita-logo-navegador.png";
 
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
@@ -179,8 +181,23 @@ function buildDigestHtml({
     <div style="font-family:Arial,sans-serif;background:#f5f2fb;padding:24px;color:#0f172a;">
       <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;border:1px solid #ddd6fe;overflow:hidden;">
         <div style="background:linear-gradient(135deg,#7c3aed,#4f46e5);padding:20px 24px;color:#ffffff;">
-          <p style="margin:0;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.85;">Pepita • Painel Jurídico</p>
-          <h2 style="margin:6px 0 0;font-size:20px;">Bom dia, ${lawyerName}!</h2>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr>
+              <td style="width:44px;vertical-align:middle;padding-right:12px;">
+                <img
+                  src="${PEPITA_AVATAR_URL}"
+                  alt="Pepita"
+                  width="44"
+                  height="44"
+                  style="width:44px;height:44px;border-radius:999px;object-fit:cover;display:block;border:2px solid rgba(255,255,255,0.65);"
+                />
+              </td>
+              <td style="vertical-align:middle;">
+                <p style="margin:0;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.85;">Pepita • Painel Jurídico</p>
+                <h2 style="margin:6px 0 0;font-size:20px;color:#ffffff;">Bom dia, ${lawyerName}!</h2>
+              </td>
+            </tr>
+          </table>
         </div>
 
         <div style="padding:20px 24px;">
