@@ -1,15 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 const prisma = new PrismaClient();
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 function formatDateBr(date: Date | string): string {
   return new Date(date).toLocaleDateString("pt-BR", {
@@ -25,23 +18,39 @@ function formatTimeBr(date: Date | string): string {
   });
 }
 
+function getSaoPauloDayBounds(referenceDate: Date = new Date()) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const [year, month, day] = formatter
+    .format(referenceDate)
+    .split("-")
+    .map(Number);
+
+  const startOfDay = new Date(Date.UTC(year, month - 1, day, 3, 0, 0, 0));
+  const endOfDay = new Date(Date.UTC(year, month - 1, day + 1, 2, 59, 59, 999));
+  const inThreeDays = new Date(
+    Date.UTC(year, month - 1, day + 4, 2, 59, 59, 999),
+  );
+
+  return { startOfDay, endOfDay, inThreeDays };
+}
+
 export async function sendDailyOfficeDigest() {
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-    throw new Error(
-      "GMAIL_USER ou GMAIL_APP_PASSWORD não configurados no .env.",
-    );
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY não configurada no .env.");
   }
 
+  const from =
+    process.env.EMAIL_FROM ||
+    "Pepita • Painel Jurídico <alertas@pepitajuridico.com.br>";
+
   const now = new Date();
-
-  const startOfDay = new Date(now);
-  startOfDay.setHours(0, 0, 0, 0);
-
-  const endOfDay = new Date(now);
-  endOfDay.setHours(23, 59, 59, 999);
-
-  const inThreeDays = new Date(endOfDay);
-  inThreeDays.setDate(inThreeDays.getDate() + 3);
+  const { startOfDay, endOfDay, inThreeDays } = getSaoPauloDayBounds(now);
 
   const users = await prisma.user.findMany({
     select: {
@@ -93,12 +102,16 @@ export async function sendDailyOfficeDigest() {
     });
 
     try {
-      await transporter.sendMail({
-        from: `"Pepita • Painel Jurídico" <${process.env.GMAIL_USER}>`,
+      const { error } = await resend.emails.send({
+        from,
         to: user.email,
         subject: `Resumo do Escritório (${formatDateBr(now)}) — ${urgentDeadlines.length} prazo(s) e ${todayAppointments.length} consulta(s)`,
         html,
       });
+
+      if (error) {
+        throw new Error(error.message);
+      }
 
       results.push({ email: user.email, status: "sent" });
     } catch (error) {
